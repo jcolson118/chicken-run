@@ -33,6 +33,7 @@ jobs:
           projectPath: Chicken Run
           targetPlatform: WebGL
           buildName: ChickenRun
+          scenes: Assets/Scenes/Main.unity
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
