@@ -1,11 +1,11 @@
 # Unity generated
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
+/Chicken Run/[Ll]ibrary/
+/Chicken Run/[Tt]emp/
+/Chicken Run/[Oo]bj/
+/Chicken Run/[Bb]uild/
+/Chicken Run/[Bb]uilds/
+/Chicken Run/[Ll]ogs/
+/Chicken Run/[Uu]ser[Ss]ettings/
 
 # Visual Studio / Rider
 .vs/
