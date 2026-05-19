@@ -5,6 +5,7 @@ public class EggController : MonoBehaviour
     [SerializeField] private Sprite[] crackSprites;   // drag egg-cracking frames here
     [SerializeField] private AnimationClip hatchClip; // drag hatch animation here
     [SerializeField] private float peckRadius = 1f;   // how close chicken must be to peck
+    [SerializeField] private GameObject chickPrefab;  // drag the Chick prefab here
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -47,14 +48,32 @@ public class EggController : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         col.isTrigger = true;
         col.enabled = true;
+
+        // Spawn the Chick prefab at the egg's position
+        if (chickPrefab != null)
+        {
+            GameObject chick = Instantiate(chickPrefab, transform.position, Quaternion.identity);
+            // Store reference to avoid repeated calls
+            StartCoroutine(WaitForChickCollision(chick));
+        }
     }
 
-    void OnTriggerStay2D(Collider2D other)
+    System.Collections.IEnumerator WaitForChickCollision(GameObject chick)
     {
-        if (isHatching && other.CompareTag("Chick"))
+        ChickController chickController = chick.GetComponent<ChickController>();
+        float timeLimit = 3f;
+        float elapsed = 0f;
+
+        while (elapsed < timeLimit && chickController != null)
         {
-            GetComponent<Collider2D>().enabled = false; // disable after chick is found
-            other.GetComponent<ChickController>().Escape();
+            if (Vector2.Distance(transform.position, chick.transform.position) < 0.5f)
+            {
+                GetComponent<Collider2D>().enabled = false;
+                chickController.Escape();
+                yield break;
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
         }
     }
 }

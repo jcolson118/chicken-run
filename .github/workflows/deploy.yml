@@ -18,8 +18,8 @@ jobs:
       - name: Cache Unity Library
         uses: actions/cache@v3
         with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          path: "Chicken Run/Library"
+          key: Library-${{ hashFiles('Chicken Run/Assets/**', 'Chicken Run/Packages/**', 'Chicken Run/ProjectSettings/**') }}
           restore-keys: |
             Library-
 
@@ -30,7 +30,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: Chicken Run
+          projectPath: "Chicken Run"
           targetPlatform: WebGL
           buildName: ChickenRun
           scenes: Assets/Scenes/Main.unity

@@ -6,12 +6,12 @@ public class ChickController : MonoBehaviour
     [SerializeField] private float flySpeed = 2.5f;
     [SerializeField] private float bobFrequency = 2f;
     [SerializeField] private float bobAmplitude = 0.3f;
-    [SerializeField]private Camera mainCamera;
+    [SerializeField] private Camera mainCamera;
 
     public float aniMult = 0.5f;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    
+
     private float timeElapsed = 0;
     private bool flying = false;
     void Start()
@@ -19,11 +19,18 @@ public class ChickController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         animator.enabled = false;
+
+        // Auto-find main camera if not assigned
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
     }
 
     void Update()
     {
-        if (! flying){
+        if (!flying)
+        {
             return;
         }
         timeElapsed += Time.deltaTime;
@@ -45,15 +52,16 @@ public class ChickController : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void Escape(){
-        
+    public void Escape()
+    {
+
         StartCoroutine(FlyAway());
     }
 
     IEnumerator FlyAway()
     {
         yield return new WaitForSeconds(1f);
-        
+
         animator.enabled = true;
         animator.SetTrigger("hatchDone");
         yield return new WaitForSeconds(0.5f);
