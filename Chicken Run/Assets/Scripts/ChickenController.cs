@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class ChickenController : MonoBehaviour
 {
@@ -51,6 +52,12 @@ public class ChickenController : MonoBehaviour
             animator.SetTrigger("jump");
         }
 
+        // Peck
+        if (Input.GetKeyDown(KeyCode.Mouse0) && isGrounded)
+        {
+            animator.SetTrigger("peck");
+            StartCoroutine(PeckDelay());
+        }
         // Glide: only when falling (velocity.y < 0) and space is held
         bool isFalling = rb.linearVelocity.y < 0;
         isGliding = !isGrounded && isFalling && Input.GetKey(KeyCode.Space);
@@ -64,5 +71,29 @@ public class ChickenController : MonoBehaviour
         bool isWalking = horizontalInput != 0 && isGrounded;
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isFlying", isGliding);
+    }
+    void OnDrawGizmosSelected()
+    {
+        float peckDistance = 0.5f;
+        float direction = spriteRenderer != null && spriteRenderer.flipX ? -1f : 1f;
+        Vector2 peckPoint = (Vector2)transform.position + new Vector2(direction * peckDistance, 0f);
+        
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(peckPoint, 0.2f);
+    }
+
+    IEnumerator PeckDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        float peckDistance = 0.5f;
+        float direction = spriteRenderer.flipX ? -1f : 1f;
+        Vector2 peckPoint = (Vector2)transform.position + new Vector2(direction * peckDistance, 0f);
+
+        Collider2D hit = Physics2D.OverlapCircle(peckPoint, 0.2f);
+        if (hit != null && hit.CompareTag("Egg"))
+        {
+            hit.GetComponent<EggController>().Peck(transform.position);
+        }
     }
 }
