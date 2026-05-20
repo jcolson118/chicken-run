@@ -52,7 +52,10 @@ public class EggController : MonoBehaviour
         // Spawn the Chick prefab at the egg's position
         if (chickPrefab != null)
         {
-            GameObject chick = Instantiate(chickPrefab, transform.position, Quaternion.identity);
+            Vector3 chickPos = transform.position;
+            chickPos.y += 0.1f; // raise chick slightly above egg
+            chickPos.z = 1f;  // Ensure chick spawns at z=1 (behind)
+            GameObject chick = Instantiate(chickPrefab, chickPos, Quaternion.identity);
             // Store reference to avoid repeated calls
             StartCoroutine(WaitForChickCollision(chick));
         }

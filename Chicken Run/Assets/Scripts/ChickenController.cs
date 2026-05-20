@@ -25,6 +25,11 @@ public class ChickenController : MonoBehaviour
 
     void Update()
     {
+        Camera.main.transform.position = new Vector3(
+        transform.position.x,
+        Camera.main.transform.position.y,
+        Camera.main.transform.position.z
+    );
         // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
 
@@ -77,7 +82,7 @@ public class ChickenController : MonoBehaviour
         float peckDistance = 0.5f;
         float direction = spriteRenderer != null && spriteRenderer.flipX ? -1f : 1f;
         Vector2 peckPoint = (Vector2)transform.position + new Vector2(direction * peckDistance, 0f);
-        
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(peckPoint, 0.2f);
     }
@@ -90,10 +95,27 @@ public class ChickenController : MonoBehaviour
         float direction = spriteRenderer.flipX ? -1f : 1f;
         Vector2 peckPoint = (Vector2)transform.position + new Vector2(direction * peckDistance, 0f);
 
-        Collider2D hit = Physics2D.OverlapCircle(peckPoint, 0.2f);
-        if (hit != null && hit.CompareTag("Egg"))
+        Debug.Log($"[PeckDelay] flipX={spriteRenderer.flipX}, direction={direction}, peckPoint={peckPoint}, chickPos={transform.position}");
+
+        // Get all colliders in the peck area and find the egg, excluding the chicken itself
+        Collider2D[] hits = Physics2D.OverlapCircleAll(peckPoint, 0.2f);
+        Collider2D eggHit = null;
+
+        foreach (Collider2D hit in hits)
         {
-            hit.GetComponent<EggController>().Peck(transform.position);
+            if (hit.gameObject != gameObject && hit.CompareTag("Egg"))
+            {
+                eggHit = hit;
+                break;
+            }
+        }
+
+        Debug.Log($"[PeckDelay] OverlapCircleAll found {hits.Length} colliders, egg hit: {(eggHit != null ? eggHit.gameObject.name : "nothing")}");
+
+        if (eggHit != null)
+        {
+            Debug.Log("[PeckDelay] Hitting egg!");
+            eggHit.GetComponent<EggController>().Peck(transform.position);
         }
     }
 }

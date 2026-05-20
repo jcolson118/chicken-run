@@ -26,6 +26,8 @@ public class EggSpawner : MonoBehaviour
             }
         }
 
+        // Ensure egg spawns at z=-1 (in front)
+        position.z = -1f;
         GameObject egg = Instantiate(eggPrefab, position, Quaternion.identity);
         return egg;
     }
